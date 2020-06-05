@@ -80,14 +80,17 @@ def post_view(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, author=author, id=post_id)
     item = post.comments.order_by('-created')
+    paginator = Paginator(item, 5)
 
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     posts = author.author_posts
     posts_number = posts.count()
     form = CommentForm(request.POST)
     return render(request, 'post.html', {'author': author, 'post': post,
                                          'form': form,
                                          'posts_number': posts_number,
-                                         'items': item})
+                                         'page': page, 'paginator': paginator})
 
 
 @ login_required
