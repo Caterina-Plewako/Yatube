@@ -25,7 +25,7 @@ class TestImg(TestCase):
         response = self.client.get('')
         self.assertContains(response, tag,
                             msg_prefix='Тэг <img> не найден на главной странице')
-        response = self.client.get(f'/{self.user.username}')
+        response = self.client.get(f'/{self.user.username}/')
         self.assertContains(response, tag,
                             msg_prefix='Тэг <img> не найден в профайле пользователя')
         response = self.client.get(f'/{self.user.username}/{self.post.id}/')

@@ -24,7 +24,7 @@ class TestFollow(TestCase):
         self.assertFalse(follow)
         follow = Follow.objects.create(user=self.user1, author=self.user2)
         self.assertTrue(follow)
-        response = self.client.get(f'/{self.user2.username}')
+        response = self.client.get(f'/{self.user2.username}/')
         self.assertEqual(response.status_code, 200)
 
     def test_follow_list(self):

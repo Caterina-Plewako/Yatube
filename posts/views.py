@@ -25,7 +25,7 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = group.group_posts.order_by('-pub_date')[:12]
+    posts = group.group_posts.order_by('-pub_date')
     paginator = Paginator(posts, 10)
 
     page_number = request.GET.get('page')
@@ -79,40 +79,39 @@ def add_comment(request, username, post_id):
 def post_view(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, author=author, id=post_id)
-    item = Comment.objects.filter(post_id=post_id).order_by('-created')[:11]
+    item = post.comments.order_by('-created')
+
     posts = author.author_posts
     posts_number = posts.count()
     form = CommentForm(request.POST)
     return render(request, 'post.html', {'author': author, 'post': post,
+                                         'form': form,
                                          'posts_number': posts_number,
-                                         'form': form, 'items': item})
+                                         'items': item})
 
 
-@login_required
+@ login_required
 def post_edit(request, username, post_id):
     author = get_object_or_404(User, username=username)
     post = get_object_or_404(Post, pk=post_id)
     user = request.user
-    if author != user:
-        return redirect('post', username=post.author, post_id=post_id)
-    else:
+    if author == user:
         if request.method == 'POST':
             form = PostForm(
                 request.POST, files=request.FILES or None, instance=post)
             if form.is_valid():
                 post = form.save(commit=False)
-                post.author = request.user
                 post.save()
-                return redirect('post', username=post.author, post_id=post_id)
         else:
             form = PostForm(instance=post)
-        return render(request, 'new_post.html', {'form': form, 'post_id': post_id,
-                                                 'author': author, 'post': post})
+            return render(request, 'new_post.html', {'form': form, 'post_id': post_id,
+                                                     'author': author, 'post': post})
+    return redirect('post', username=post.author, post_id=post_id)
 
 
-@login_required
+@ login_required
 def follow_index(request):
-    follow = Follow.objects.filter(user=request.user).all()
+    follow = Follow.objects.filter(user=request.user)
     authors = (i.author for i in follow)
     post_list = Post.objects.filter(author__in=authors).order_by('-pub_date')
     paginator = Paginator(post_list, 10)
@@ -122,19 +121,17 @@ def follow_index(request):
     return render(request, 'follow.html', {'page': page, 'paginator': paginator})
 
 
-@login_required
+@ login_required
 def profile_follow(request, username):
     author = get_object_or_404(User, username=username)
     follow = Follow.objects.filter(user=request.user, author=author).exists()
-    if follow:
-        return redirect('profile', username=username)
-    else:
+    if not follow:
         if author != request.user:
             Follow.objects.create(user=request.user, author=author)
-        return redirect('profile', username=username)
+    return redirect('profile', username=username)
 
 
-@login_required
+@ login_required
 def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
     follow = Follow.objects.filter(user=request.user, author=author).exists()

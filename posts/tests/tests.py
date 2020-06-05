@@ -15,24 +15,24 @@ class TestStringMethods(TestCase):
             text='Follow the white rabbit.', author=self.user)
 
     def test_profile_exist(self):
-        response = self.client.get(f'/{self.user.username}')
+        response = self.client.get(f'/{self.user.username}/')
         self.assertEqual(response.status_code, 200)
 
     def test_new(self):
-        response = self.client.get('/new')
+        response = self.client.get('/new/')
         self.assertEqual(response.status_code, 302)
 
     def test_redirect_not_logged_user(self):
         self.client.logout()
-        response = self.client.get('/new', follow=True)
-        self.assertRedirects(response, '/auth/login/?next=/new')
+        response = self.client.get('/new/', follow=True)
+        self.assertRedirects(response, '/auth/login/?next=/new/')
 
     def test_post_exist(self):
         response = self.client.get('')
         self.assertContains(
             response, self.text,
             msg_prefix='Новый пост не появляется на главной странице')
-        response = self.client.get(f'/{self.user.username}')
+        response = self.client.get(f'/{self.user.username}/')
         self.assertContains(
             response, self.text,
             msg_prefix='Новый пост не появляется в профайле пользователя')
@@ -49,7 +49,7 @@ class TestStringMethods(TestCase):
         self.assertContains(
             response, self.text,
             msg_prefix='Отредактированный пост не появляется на главной странице')
-        response = self.client.get(f'/{self.user.username}')
+        response = self.client.get(f'/{self.user.username}/')
         self.assertContains(
             response, self.text,
             msg_prefix='Отредактированный пост не появляется в профайле пользователя')

@@ -10,27 +10,27 @@
                         <div class="h2">
                             <!-- Имя автора -->
                             {{ author.get_full_name|default:author.username }}
-                            </div>
-                                <div class="h3 text-muted">
-                                    <!-- username автора -->
-                                    {{ username }}
+                        </div>
+                        <div class="h3 text-muted">
+                            <!-- username автора -->
+                            {{ username }}
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="h6 text-muted">
+                                    Подписчиков: {{ author.following.count }} <br />
+                                    Подписан: {{ user.following.count }}
                                 </div>
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <div class="h6 text-muted">
-                                        Подписчиков: XXX <br />
-                                        Подписан: XXX
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="h6 text-muted">
-                                        <!--Количество записей -->
-                                        Записей: {{ posts_number }}
-                                    </div>
-                                </li>
-                            </ul>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="h6 text-muted">
+                                    <!--Количество записей -->
+                                    Записей: {{ posts_number }}
+                                </div>
+                            </li>
+                        </ul>
                     </div>
+                </div>
             </div>
 
             <div class="col-md-9">
@@ -38,7 +38,7 @@
                 <!-- Пост -->  
                 <div class="card mb-3 mt-1 shadow-sm">
                     {% thumbnail post.image "860x470" crop="center" upscale=True as im %}
-                    <img class="card-img" src="{{ im.url }}">
+                        <img class="card-img" src="{{ im.url }}">
                     {% endthumbnail %}
                     <div class="card-body">
                         <p class="card-text">
