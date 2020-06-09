@@ -18,7 +18,8 @@ class TestCache(TestCase):
     def test_cache(self):
         response = self.client.get('')
         html1 = response.content.decode('utf-8')
-        self.client.post('/new/', {'text': 'Interesting text'}, follow=True)
+        self.client.post(reverse('new_post'), {
+                         'text': 'Interesting text'}, follow=True)
         response = self.client.get('')
         html2 = response.content.decode('utf-8')
         self.assertHTMLEqual(html1, html2)

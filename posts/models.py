@@ -24,6 +24,9 @@ class Post(models.Model):
     image = models.ImageField(
         upload_to='posts/', verbose_name='Изображение', blank=True, null=True)
 
+    class Meta:
+        ordering = ['-pub_date']
+
     def __str__(self):
         return self.text
 
@@ -32,9 +35,12 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True,
                              null=True, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name='author_comments')
+                               related_name='comments_author')
     text = models.TextField(verbose_name='Комментарий', blank=False)
     created = models.DateTimeField('date published', auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created']
 
 
 class Follow(models.Model):

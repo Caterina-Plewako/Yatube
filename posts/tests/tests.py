@@ -15,16 +15,17 @@ class TestStringMethods(TestCase):
             text='Follow the white rabbit.', author=self.user)
 
     def test_profile_exist(self):
-        response = self.client.get(f'/{self.user.username}/')
+        response = self.client.get(
+            reverse('profile', kwargs={'username': self.user.username}))
         self.assertEqual(response.status_code, 200)
 
     def test_new(self):
-        response = self.client.get('/new/')
+        response = self.client.get(reverse('new_post'))
         self.assertEqual(response.status_code, 302)
 
     def test_redirect_not_logged_user(self):
         self.client.logout()
-        response = self.client.get('/new/', follow=True)
+        response = self.client.get(reverse('new_post'))
         self.assertRedirects(response, '/auth/login/?next=/new/')
 
     def test_post_exist(self):
@@ -32,28 +33,34 @@ class TestStringMethods(TestCase):
         self.assertContains(
             response, self.text,
             msg_prefix='Новый пост не появляется на главной странице')
-        response = self.client.get(f'/{self.user.username}/')
+        response = self.client.get(
+            reverse('profile', kwargs={'username': self.user.username}))
         self.assertContains(
             response, self.text,
             msg_prefix='Новый пост не появляется в профайле пользователя')
         response = self.client.get(
-            f'/{self.user.username}/{self.text.id}/')
+            reverse('post', kwargs={'username': self.user.username,
+                                    'post_id': self.text.id}))
         self.assertContains(
             response, self.text,
             msg_prefix='Новый пост не появляется на странице просмотра записи')
 
     def test_author_can_edit(self):
-        self.client.post(f'/{self.user.username}/{self.text.id}/edit/',
-                         {'text': 'edited'})
+        self.client.post(reverse('post_edit', kwargs={
+            'username': self.user.username, 'post_id': self.text.id}),
+            {'text': 'Test'})
         response = self.client.get('')
         self.assertContains(
             response, self.text,
             msg_prefix='Отредактированный пост не появляется на главной странице')
-        response = self.client.get(f'/{self.user.username}/')
+        response = self.client.get(
+            reverse('profile', kwargs={'username': self.user.username}))
         self.assertContains(
             response, self.text,
             msg_prefix='Отредактированный пост не появляется в профайле пользователя')
-        response = self.client.get(f'/{self.user.username}/{self.text.id}/')
+        response = self.client.get(
+            reverse('post', kwargs={'username': self.user.username,
+                                    'post_id': self.text.id}))
         self.assertContains(
             response, self.text,
             msg_prefix='Отредактированный пост не появляется на странице просмотра записи')
