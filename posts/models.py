@@ -17,10 +17,10 @@ class Post(models.Model):
     text = models.TextField(verbose_name='Текст', blank=False)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name='author_posts')
+                               related_name='posts')
     group = models.ForeignKey(Group, on_delete=models.CASCADE,
                               verbose_name='Группа', blank=True,
-                              null=True, related_name='group_posts')
+                              null=True, related_name='posts')
     image = models.ImageField(
         upload_to='posts/', verbose_name='Изображение', blank=True, null=True)
 
@@ -35,7 +35,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True,
                              null=True, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name='comments_author')
+                               related_name='comments')
     text = models.TextField(verbose_name='Комментарий', blank=False)
     created = models.DateTimeField('date published', auto_now_add=True)
 
