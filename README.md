@@ -4,7 +4,7 @@
 # Инструкция по развертыванию проекта
 1. Скачать проект или клонировать с помощью git 
 ```
-git clone https://github.com/Caterina-Plewako/infra_sp2.git
+git clone https://github.com/Caterina-Plewako/Yatube.gitt
 ```
 
 2. Перейти в каталог с проектом и создать виртуальное окружение 
